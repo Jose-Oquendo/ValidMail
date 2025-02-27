@@ -1,0 +1,23 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTP:Authorization} ^(.*)
+    RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+    RewriteBase /services/ValMail/
+    
+    # Asegúrate de que el archivo public/index.php no se vea afectado por otras reglas
+    RewriteRule ^public/index\.php$ - [L]
+
+    # Si el archivo solicitado no existe
+    RewriteCond %{REQUEST_FILENAME} !-f
+    # Si la carpeta solicitada no existe
+    RewriteCond %{REQUEST_FILENAME} !-d
+    # Redirigir todo a public/index.php
+    RewriteRule . public/index.php [L]
+</IfModule>
+
+
+
+
+
+
+
