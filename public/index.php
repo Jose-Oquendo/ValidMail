@@ -2,6 +2,8 @@
 declare(strict_types=1);
 
 use Slim\Exception\HttpInternalServerErrorException;
+use Slim\Psr7\Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 use Dotenv\Dotenv;
 
@@ -21,7 +23,19 @@ try {
   $repository = new \Routes\Router($api);
   $repository->setRoutes();
   
-  $api->addErrorMiddleware(true, true, true);
+  $api->addErrorMiddleware(true, true, true)->setDefaultErrorHandler(function (Request $request, Throwable $exception) {
+    $errorMessage = [
+      "error" => "La ruta no existe.",
+      "message" => $exception->getMessage(),
+      "status" => $exception->getCode() ?: 500,
+    ];
+
+    $response = new Response();
+
+    $response->getBody()->write(json_encode($errorMessage));
+    return $response->withHeader('Content-Type', 'application/json');
+  });
+
   try {
     $api->run();
   } catch (HttpInternalServerErrorException $e) {    

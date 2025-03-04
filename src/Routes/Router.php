@@ -40,9 +40,19 @@ class Router
         });
         $this->app->group('/catch', function (RouteCollectorProxy $group) {
             $group->post('', [Catcher::class, 'getWelcome']);
+            $group->post('/email', [Catcher::class, 'emailVerification']);
         });
         $this->app->group('/mail', function (RouteCollectorProxy $group) {
             $group->post('', [Mailer::class, 'getWelcome']);
+        });
+        // Ruta 404
+        $this->app->get('/not-found', function ($request, $response, $args) {
+            return $response->withStatus(404)->write('Página no encontrada');
+        });
+
+        // Ruta 405
+        $this->app->post('/not-allowed', function ($request, $response, $args) {
+            return $response->withStatus(405)->write('Método no permitido');
         });
 
         return 'Rutas exitosas!';
