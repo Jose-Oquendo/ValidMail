@@ -9,19 +9,14 @@ use PDOException;
 use Exception;
 
 class Database {
-
-    private $db;
+    
     private $conn;
+    private $db = '';
     private $controller_db = 'pgsql';
     private $host_db       = 'localhost';
     private $port_db       = 80; //change to the correct port
     private $user_db       = '';
     private $pass_db       = '';
-
-    public function __construct($dbname){
-        $this->db = $dbname;
-        // $this->conn();
-    }
 
     private function conn(){
         try {
